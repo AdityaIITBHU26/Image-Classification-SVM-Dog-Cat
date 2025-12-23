@@ -44,19 +44,26 @@ def extractfeature(imgpath):
 @app.route("/", methods=["GET", "POST"])
 def index():
     prediction = None
-    image_path = None
+    image_url = None
 
     if request.method == "POST":
         file = request.files["image"]
         if file:
-            image_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+            filename = file.filename
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
             file.save(image_path)
 
             feat = extractfeature(image_path)
             pred = svm.predict(feat)[0]
             prediction = "Dog 🐶" if pred == 1 else "Cat 🐱"
 
-    return render_template("index.html", prediction=prediction, image=image_path)
+            image_url = f"/static/uploads/{filename}"
+
+    return render_template(
+        "index.html",
+        prediction=prediction,
+        image=image_url
+    )
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
