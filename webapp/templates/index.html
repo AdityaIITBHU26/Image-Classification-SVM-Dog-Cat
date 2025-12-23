@@ -12,50 +12,29 @@
       color: #e5e7eb;
       min-height: 100vh;
     }
-
-    .navbar {
-      background: #020617;
-    }
-
+    .navbar { background: #020617; }
     .upload-box {
       border: 2px dashed #22d3ee;
       border-radius: 16px;
       padding: 40px;
       text-align: center;
       cursor: pointer;
-      transition: 0.3s;
       background: #020617;
     }
-
-    .upload-box:hover {
-      border-color: #38bdf8;
-    }
-
-    .upload-box.dragover {
-      border-color: #22d3ee;
-    }
-
+    .upload-box.dragover { border-color: #38bdf8; }
     .btn-primary {
       background: #22d3ee;
       border: none;
       color: #020617;
       font-weight: 600;
     }
-
-    .btn-primary:hover {
-      background: #38bdf8;
-    }
-
     .preview-img {
       max-width: 260px;
       border-radius: 12px;
       margin-top: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
-
-    footer {
-      color: #94a3b8;
-    }
+    footer { color: #94a3b8; }
   </style>
 </head>
 
@@ -63,10 +42,9 @@
 
 <!-- NAVBAR -->
 <nav class="navbar py-3">
-  <div class="container">
-    <span class="navbar-brand fw-bold fs-3 text-info">
-      Gajju 🐶🐱
-    </span>
+  <div class="container d-flex align-items-center gap-3">
+    <img src="/static/gajjulogo.svg" width="40" />
+    <span class="fw-bold fs-3 text-info">Gajju</span>
   </div>
 </nav>
 
@@ -79,18 +57,7 @@
         Upload or drag an image and <strong>Gajju</strong> will classify it using
         classical ML (HOG + PCA + SVM).
       </p>
-
-      <span class="badge bg-success fs-6 mt-2">
-        Model Accuracy: {{ accuracy }}%
-      </span>
-    </div>
-
-    <div class="col-md-6 text-center">
-      <img
-        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b"
-        class="img-fluid rounded shadow"
-        width="420"
-      >
+      <span class="badge bg-success fs-6">Model Accuracy: {{ accuracy }}%</span>
     </div>
   </div>
 </section>
@@ -98,21 +65,14 @@
 <!-- UPLOAD -->
 <section class="container mb-5">
   <form method="POST" enctype="multipart/form-data">
-
     <div id="uploadBox" class="upload-box mb-3">
       <p class="fs-5 text-info mb-1">Drag & Drop Image Here</p>
       <p class="text-secondary">or click to browse</p>
-
       <input type="file" id="fileInput" name="image" accept="image/*" hidden required>
-
       <p id="fileName" class="mt-3 text-success fw-semibold"></p>
       <img id="preview" class="preview-img d-none">
     </div>
-
-    <button type="submit" class="btn btn-primary w-100 py-2">
-      Predict
-    </button>
-
+    <button class="btn btn-primary w-100 py-2">Predict</button>
   </form>
 </section>
 
@@ -137,44 +97,32 @@
 </section>
 {% endif %}
 
-<!-- FOOTER -->
 <footer class="text-center mb-3">
   Powered by <strong>Gajju</strong> • Classical ML (HOG + PCA + SVM)
 </footer>
 
-<!-- SCRIPT -->
 <script>
   const uploadBox = document.getElementById("uploadBox");
   const fileInput = document.getElementById("fileInput");
   const fileName = document.getElementById("fileName");
   const preview = document.getElementById("preview");
 
-  uploadBox.addEventListener("click", () => fileInput.click());
-
-  uploadBox.addEventListener("dragover", e => {
-    e.preventDefault();
-    uploadBox.classList.add("dragover");
-  });
-
-  uploadBox.addEventListener("dragleave", () => {
-    uploadBox.classList.remove("dragover");
-  });
-
-  uploadBox.addEventListener("drop", e => {
+  uploadBox.onclick = () => fileInput.click();
+  uploadBox.ondragover = e => { e.preventDefault(); uploadBox.classList.add("dragover"); };
+  uploadBox.ondragleave = () => uploadBox.classList.remove("dragover");
+  uploadBox.ondrop = e => {
     e.preventDefault();
     uploadBox.classList.remove("dragover");
     fileInput.files = e.dataTransfer.files;
     showPreview();
-  });
+  };
 
-  fileInput.addEventListener("change", showPreview);
+  fileInput.onchange = showPreview;
 
   function showPreview() {
     const file = fileInput.files[0];
     if (!file) return;
-
     fileName.textContent = "Selected file: " + file.name;
-
     const reader = new FileReader();
     reader.onload = () => {
       preview.src = reader.result;
