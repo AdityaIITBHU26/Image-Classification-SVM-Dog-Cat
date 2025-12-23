@@ -9,7 +9,7 @@ This project implements a classical machine learning approach to classify images
 
 The application is deployed and publicly accessible:
 
-🔗 [link](https://image-classification-svm-dog-cat.onrender.com/)
+🔗 [Identify Dogs & Cats using AI](https://image-classification-svm-dog-cat.onrender.com/)
 
 > Note: The free hosting service may take a few seconds to wake up.
 
