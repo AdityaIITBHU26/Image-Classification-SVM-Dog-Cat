@@ -28,12 +28,10 @@
     }
 
     .upload-box:hover {
-      background: #020617;
       border-color: #38bdf8;
     }
 
     .upload-box.dragover {
-      background: #020617;
       border-color: #22d3ee;
     }
 
@@ -82,12 +80,17 @@
         classical ML (HOG + PCA + SVM).
       </p>
 
-      <span class="badge bg-success fs-6 mt-2">Model Accuracy: 85%</span>
+      <span class="badge bg-success fs-6 mt-2">
+        Model Accuracy: {{ accuracy }}%
+      </span>
     </div>
 
     <div class="col-md-6 text-center">
-      <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b"
-           class="img-fluid rounded shadow" width="420">
+      <img
+        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b"
+        class="img-fluid rounded shadow"
+        width="420"
+      >
     </div>
   </div>
 </section>
