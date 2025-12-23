@@ -9,9 +9,16 @@ from skimage.feature import hog
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "static/uploads"
 
-svm = joblib.load("../models/svm_pca_dog_cat.pkl")
-pca = joblib.load("../models/pca.pkl")
-scaler = joblib.load("../models/scaler.pkl")
+# svm = joblib.load("../models/svm_pca_dog_cat.pkl")
+# pca = joblib.load("../models/pca.pkl")
+# scaler = joblib.load("../models/scaler.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "..", "models")
+
+svm = joblib.load(os.path.join(MODEL_DIR, "svm_pca_dog_cat.pkl"))
+pca = joblib.load(os.path.join(MODEL_DIR, "pca.pkl"))
+scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
+
 
 imgsize = 128
 
