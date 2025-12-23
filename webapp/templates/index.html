@@ -125,7 +125,15 @@
     {{ prediction }}
   </div>
 
-  <img src="{{ image }}" class="preview-img">
+  <div class="btn-group mb-3">
+    <button class="btn btn-outline-info" onclick="showHuman()">Human View</button>
+    <button class="btn btn-outline-info" onclick="showHog()">AI View (HOG)</button>
+  </div>
+
+  <div>
+    <img id="humanView" src="{{ image }}" class="preview-img">
+    <img id="hogView" src="{{ hog_image }}" class="preview-img d-none">
+  </div>
 </section>
 {% endif %}
 
@@ -173,6 +181,16 @@
       preview.classList.remove("d-none");
     };
     reader.readAsDataURL(file);
+  }
+
+  function showHuman() {
+    document.getElementById("humanView").classList.remove("d-none");
+    document.getElementById("hogView").classList.add("d-none");
+  }
+
+  function showHog() {
+    document.getElementById("hogView").classList.remove("d-none");
+    document.getElementById("humanView").classList.add("d-none");
   }
 </script>
 
