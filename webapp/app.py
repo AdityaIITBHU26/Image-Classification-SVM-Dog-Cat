@@ -1,27 +1,28 @@
 from flask import Flask, render_template, request
 import os
 import cv2
-import numpy as np
 import joblib
-
 from skimage.feature import hog
 
-app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "static/uploads"
-
-# svm = joblib.load("../models/svm_pca_dog_cat.pkl")
-# pca = joblib.load("../models/pca.pkl")
-# scaler = joblib.load("../models/scaler.pkl")
+# ---------------- PATH SETUP ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "..", "models")
 
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ---------------- APP ----------------
+app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# ---------------- LOAD MODELS ----------------
 svm = joblib.load(os.path.join(MODEL_DIR, "svm_pca_dog_cat.pkl"))
 pca = joblib.load(os.path.join(MODEL_DIR, "pca.pkl"))
 scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
 
-
 imgsize = 128
 
+# ---------------- FEATURE EXTRACTION ----------------
 def extractfeature(imgpath):
     img = cv2.imread(imgpath)
     img = cv2.resize(img, (imgsize, imgsize))
@@ -37,9 +38,9 @@ def extractfeature(imgpath):
 
     features = scaler.transform([features])
     features = pca.transform(features)
-
     return features
 
+# ---------------- ROUTES ----------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     prediction = None
@@ -53,10 +54,10 @@ def index():
 
             feat = extractfeature(image_path)
             pred = svm.predict(feat)[0]
-
             prediction = "Dog 🐶" if pred == 1 else "Cat 🐱"
 
     return render_template("index.html", prediction=prediction, image=image_path)
 
+# ---------------- MAIN ----------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
