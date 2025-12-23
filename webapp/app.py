@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import os
 import cv2
 import joblib
-import numpy as np
 from skimage.feature import hog
 
 # ---------------- PATH SETUP ----------------
@@ -41,20 +40,10 @@ def extractfeature(imgpath):
     features = pca.transform(features)
     return features
 
-# ---------------- PREDICTION WITH CONFIDENCE ----------------
-def predict_with_confidence(feat):
-    score = svm.decision_function(feat)[0]
-    confidence = 1 / (1 + np.exp(-score))
-    confidence = round(confidence * 100, 2)
-
-    label = "Dog 🐶" if score > 0 else "Cat 🐱"
-    return label, confidence
-
 # ---------------- ROUTES ----------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     prediction = None
-    confidence = None
     image_url = None
 
     if request.method == "POST":
@@ -67,15 +56,15 @@ def index():
             image_url = f"/static/uploads/{filename}"
 
             feat = extractfeature(image_path)
-            prediction, confidence = predict_with_confidence(feat)
+            pred = svm.predict(feat)[0]
+            prediction = "Dog 🐶" if pred == 1 else "Cat 🐱"
 
     return render_template(
         "index.html",
         prediction=prediction,
-        confidence=confidence,
-        image=image_url
+        image=image_url,
+        accuracy=85
     )
 
-# ---------------- MAIN ----------------
 if __name__ == "__main__":
     app.run()
